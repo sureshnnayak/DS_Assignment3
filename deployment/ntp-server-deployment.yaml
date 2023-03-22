@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ntp-server
+  name: ntp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ntp-server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/distributedsystems-default: "true"
+        io.kompose.service: ntp-server
+    spec:
+      containers:
+        - env:
+            - name: UDP_IP_ADDRESS
+              value: 0.0.0.0
+            - name: UDP_PORT_NO
+              value: "1234"
+          image: gcr.io/distributedsystems-swsr1249/ntp_server:latest
+          name: ntp-server
+          ports:
+            - containerPort: 1234
+              protocol: UDP
+          resources: {}
+      hostname: ntp-server
+      restartPolicy: Always
+status: {}
